@@ -4,29 +4,12 @@ import Timer from './Timer'
 const TimerContainer = () => {
   const [time, setTimer] = useState(1500)
   const [timerRunning, timerSwitch] = useState(false)
-  const minutes = Math.floor(time / 60);
-  const seconds = time - minutes * 60;
-
+  
   useInterval(() => {
     if(timerRunning) setTimer(prevTime => prevTime - 1);
   }, 1000);
 
-  function str_pad_left(string,pad,length) {
-    return (new Array(length+1).join(pad)+string).slice(-length);
-}
-
-var finalTime = str_pad_left(minutes,'0',2)+':'+str_pad_left(seconds,'0',2);
-
-
-
-  return (
-    <Fragment>
-      <Timer time={finalTime} timerRunning={timerRunning} switcher={timerSwitch} />
-    </Fragment>
-  )
-}
-
-function useInterval(callback, timeRunning) {
+  function useInterval(callback, timerRunning) {
     const savedCallback = useRef();
   
     // Remember the latest function.
@@ -39,11 +22,18 @@ function useInterval(callback, timeRunning) {
       function tick() {
         savedCallback.current();
       }
-      if (timeRunning) {
-        let id = setInterval(tick, timeRunning);
+      if (timerRunning) {
+        let id = setInterval(tick, 1000);
         return () => clearInterval(id);
       }
-    }, [timeRunning]);
+    }, [timerRunning]);
   }
+
+  return (
+    <Fragment>
+      <Timer time={time} timerRunning={timerRunning} switcher={timerSwitch} setTimer={setTimer}/>
+    </Fragment>
+  )
+}
 
 export default TimerContainer
